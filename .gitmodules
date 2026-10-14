@@ -1,0 +1,3 @@
+[submodule "external/desktop-fly"]
+	path = external/desktop-fly
+	url = https://github.com/DenisSergeevitch/desktop-fly
