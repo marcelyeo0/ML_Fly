@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Data and generated outputs (large, licensed separately)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+outputs/
+exports/
+
+# Brian2 standalone builds
+output/
+standalone/
+
+# Docs build
+site/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
