@@ -33,9 +33,10 @@ FlyWire connectome (v783: 138,639 neurons, 15.1 M connections, 54.5 M synapses).
 | LIF vs Brian2 reference (sugar GRNs → MN9, 10 trials) | Pearson r = 0.956, Spearman 0.962, MN9 106 vs 93 Hz | `results/validation_sugar.txt` |
 | super-class from wiring only (GBDT, 25 % test) | accuracy 0.973, macro-F1 0.860 | `results/classifier_super_class.txt` |
 | + neurotransmitter + position | accuracy 0.981, macro-F1 0.897 | idem |
+| speed, 25 ms of whole brain (no C++ compiler) | flybrain ≈ 1–2 s vs Brian2 numpy ≈ 500 s | `docs/PROJET.md` §6.2 |
 | left vs right ORN stimulation | ipsilateral bias in DNa02 (known steering DN), crossed DNbe007/DNb05 | `results/odor_lateralization.txt` |
-| connectome-constrained RNN (ORN → DN steering) | see `results/` | `results/train_steering.json` |
-| closed loop brain ↔ body | see `results/closedloop.png` | `results/` |
+| connectome-constrained RNN (ORN → DN steering) | test R² 0.85 after 20 epochs; shuffled-wiring control still to run | `flybrain train` |
+| closed loop brain ↔ body | 15 lateralised steering DNs calibrated; short sub-network run OK; 2 s whole-brain run pending | `results/closedloop_calibration.txt` |
 
 ## Install
 
