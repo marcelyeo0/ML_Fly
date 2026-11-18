@@ -14,6 +14,7 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import os
 import re
 import shutil
@@ -44,6 +45,12 @@ def main() -> None:
     )
     if n != 1:
         sys.exit("could not find PHYS_DURATION_S in NeuroFly script (upstream changed?)")
+    # upstream loads flygym files from its own venv folder ("wenv310/..."): point to ours
+    flygym_dir = Path(importlib.util.find_spec("flygym").submodule_search_locations[0])
+    src = src.replace(
+        "Path(__file__).parent / 'wenv310/lib/site-packages/flygym/",
+        f"Path(r'{flygym_dir}') / '",
+    )
 
     # NeuroFly prints unicode symbols; the Windows console default (cp1252) chokes on them
     for stream in (sys.stdout, sys.stderr):

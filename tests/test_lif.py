@@ -64,7 +64,7 @@ def test_refractory_period_caps_rate():
     net.set_poisson([0], 5000)
     rec = net.run(100)
     isi = np.diff(rec.times[rec.neurons == 1])
-    assert isi.min() >= LIFParams().t_rfc
+    assert isi.min() >= LIFParams().t_rfc - 1e-3  # float32 spike times
 
 
 def test_silence_removes_output():

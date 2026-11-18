@@ -117,7 +117,9 @@ class LIFNetwork:
         a = p.tau / (p.tau - p.t_mbr)  # particular-solution coefficient
         self._c = a * (self._e_s - self._e_m)  # effect of g on v over one step
         self._delay_steps = max(1, round(p.t_dly / dt))
-        self._rfc_steps = round(p.t_rfc / dt)
+        # Brian2: integration resumes once timestep(t - lastspike) >= timestep(t_rfc),
+        # i.e. the neuron is frozen for the round(t_rfc/dt) - 1 steps after its spike
+        self._rfc_steps = max(0, round(p.t_rfc / dt) - 1)
 
         self.poisson_idx = np.empty(0, np.int64)
         self.poisson_rate = np.empty(0, np.float64)
@@ -180,7 +182,14 @@ class LIFNetwork:
         if len(frozen):
             v[frozen], g[frozen] = v_frozen, g_frozen
 
-        # 2) delayed synaptic input arriving now + Poisson input
+        # Same order as Brian2's default schedule:
+        #   groups (state update) -> thresholds -> synapses -> resets
+        # 2) threshold (refractory neurons cannot fire)
+        spiked = np.flatnonzero(v > p.v_th)
+        if len(frozen) and len(spiked):
+            spiked = spiked[self._rfc_left[spiked] == 0]
+
+        # 3) delayed synaptic input arriving now + Poisson input (Brian2 "synapses" slot)
         slot = self.step_count % len(self._ring)
         g += self._ring[slot]
         self._ring[slot] = 0.0
@@ -188,14 +197,11 @@ class LIFNetwork:
             hits = self.rng.random(len(self.poisson_idx)) < self._poisson_p
             v[self.poisson_idx[hits]] += p.w_syn * p.f_poi
 
-        # 3) threshold (refractory neurons cannot fire), reset
-        spiked = np.flatnonzero(v > p.v_th)
-        if len(frozen) and len(spiked):
-            spiked = spiked[self._rfc_left[spiked] == 0]
         # release neurons whose refractory period is over
         if len(frozen):
             self._rfc_left[frozen] -= 1
             self._frozen = frozen[self._rfc_left[frozen] > 0]
+        # 4) reset (input that arrived this step to a spiking neuron is discarded)
         if len(spiked):
             v[spiked] = p.v_rst
             g[spiked] = 0.0
@@ -203,7 +209,7 @@ class LIFNetwork:
             if self._rfc_steps and len(new_ref):
                 self._rfc_left[new_ref] = self._rfc_steps
                 self._frozen = np.union1d(self._frozen, new_ref)
-            # 4) schedule postsynaptic input after the delay (CSC column gather)
+            # 5) schedule postsynaptic input after the delay (CSC column gather)
             ip, ix, dat = self.W.indptr, self.W.indices, self.W.data
             starts, ends = ip[spiked], ip[spiked + 1]
             lens = ends - starts
