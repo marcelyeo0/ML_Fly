@@ -27,6 +27,11 @@ DEFAULT_DATA_DIR = REPO_ROOT / "external" / "NeuroFly" / "brain_model"
 
 COMPLETENESS = "Completeness_783.csv"
 CONNECTIVITY = "Connectivity_783.parquet"
+# older FlyWire materialisation used in the Shiu et al. reference results
+VERSIONS = {
+    "783": (COMPLETENESS, CONNECTIVITY),
+    "630": ("2023_03_23_completeness_630_final.csv", "2023_03_23_connectivity_630_final.parquet"),
+}
 ANNOTATIONS = "flywire_annotations.tsv"
 
 ANNOTATION_COLUMNS = [
@@ -84,13 +89,19 @@ class Connectome:
 
     # ------------------------------------------------------------------ construction
     @classmethod
-    def load(cls, directory: str | Path | None = None, annotations: bool = True) -> Connectome:
-        """Load the full FlyWire v783 brain (~139k neurons, ~15M connections)."""
+    def load(
+        cls,
+        directory: str | Path | None = None,
+        annotations: bool = True,
+        version: str = "783",
+    ) -> Connectome:
+        """Load the full FlyWire brain (v783: ~139k neurons, ~15M connections)."""
         d = Path(directory) if directory is not None else data_dir()
-        comp = pd.read_csv(_require(d / COMPLETENESS), index_col=0)
+        comp_file, con_file = VERSIONS[version]
+        comp = pd.read_csv(_require(d / comp_file), index_col=0)
         root_ids = comp.index.to_numpy(dtype=np.int64)
         con = pd.read_parquet(
-            _require(d / CONNECTIVITY),
+            _require(d / con_file),
             columns=["Presynaptic_Index", "Postsynaptic_Index", "Excitatory x Connectivity"],
         )
         neurons = pd.DataFrame({"root_id": root_ids})
