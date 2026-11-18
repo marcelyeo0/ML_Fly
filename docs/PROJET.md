@@ -296,7 +296,53 @@ reste propre) en corrigeant à la volée :
 
 ## 6. Résultats
 
-<!-- RESULTS -->
+### 6.1 Validation du simulateur (`results/validation_sugar.txt`)
+
+Pearson r = 0,956, Spearman 0,962, MN9 106 Hz vs 93 Hz (Brian2), 10 essais.
+
+### 6.2 Vitesse (mesurée sur un i5-1135G7, 16 Go, sans compilateur C++)
+
+| simulateur | temps pour 25 ms de cerveau entier |
+| --- | --- |
+| Brian2, backend numpy (NeuroFly) | **≈ 500 s** (construction du réseau : 4–10 min en plus) |
+| `flybrain.lif` | **≈ 1–2 s** |
+
+Soit ≈ 300× plus rapide dans cette configuration. 10 s de NeuroFly en numpy ≈ 55 h ;
+l'auteur annonce 2h30–3h avec le backend C++ (Visual Studio requis).
+
+### 6.3 Graphe (`results/graph_analytics.txt`)
+
+- Neurones avec le plus fort PageRank : **APL** (grand neurone inhibiteur du corps
+  pédonculé, centre de l'apprentissage olfactif), **DPM**, **CT1** (lobe optique),
+  et **DNa02** (neurone descendant de pilotage) dans le top 13.
+- **Rich club** : les 1 % de neurones les plus connectés sont 58× plus interconnectés
+  que la moyenne du graphe.
+- Synapses : 56 % acétylcholine, 23 % GABA, 17 % glutamate (≈ 40 % inhibitrices).
+- Les neurones optiques envoient 82 % de leurs synapses à d'autres neurones optiques ;
+  les DN envoient 35 % de leurs synapses (dans le cerveau) à d'autres DN.
+- 89 composantes faiblement connexes (un grand composant + petits fragments).
+
+### 6.4 Classification (`results/classifier_super_class.txt`)
+
+Câblage seul : accuracy 0,973, macro-F1 0,860 ; avec NT + position : 0,981 / 0,897.
+
+### 6.5 Latéralisation olfactive (`results/odor_lateralization.txt`, `results/closedloop_calibration.txt`)
+
+Calibration (4 essais × 500 ms par côté) : **15 DN** significativement latéralisés
+(|z| ≥ 2), par ex. DNge054 gauche (0,5 Hz odeur gauche vs 21 Hz odeur droite, z = −6,2),
+DNg16 gauche/droit (préférence odeur gauche), DNp56 et DNbe007 gauches (préférence
+odeur droite, réponse croisée).
+
+### 6.6 Boucle fermée et RNN contraint
+
+- Boucle fermée validée en test court (sous-réseau de 10k neurones, 0,25 s simulée,
+  vidéo MP4 produite). Le run cerveau entier de 2 s a été interrompu par manque de
+  mémoire (il tournait en même temps que NeuroFly/Brian2 ≈ 3 Go et l'app Electron) ; à
+  relancer seul : `flybrain closedloop --seconds 2`.
+- RNN contraint : R² test = 0,85 après 20 époques sur le circuit ORN→DN (4 473
+  neurones). La comparaison complète avec le connectome mélangé reste à lancer
+  (`flybrain train`).
+
 
 ---
 

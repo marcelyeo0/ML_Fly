@@ -1,0 +1,12 @@
+calibrating steering readout (open loop) ...
+  15 steering DNs selected [700 s]
+       DNge054  left  L-stim    0.5 Hz  R-stim   21.0 Hz  z=-6.2
+       DNge042  left  L-stim   10.5 Hz  R-stim    1.0 Hz  z=+3.9
+         DNg16  left  L-stim    9.0 Hz  R-stim    0.5 Hz  z=+3.8
+         DNp56  left  L-stim   33.5 Hz  R-stim   56.5 Hz  z=-3.4
+       DNge047 right  L-stim    4.5 Hz  R-stim   15.0 Hz  z=-3.3
+       DNbe007  left  L-stim   90.5 Hz  R-stim  122.0 Hz  z=-3.1
+         DNg16 right  L-stim    6.5 Hz  R-stim    1.0 Hz  z=+2.8
+       DNge031  left  L-stim   29.0 Hz  R-stim   16.0 Hz  z=+2.7
+        DNg100 right  L-stim    3.5 Hz  R-stim    0.0 Hz  z=+2.5
+         DNg44 right  L-stim    3.5 Hz  R-stim    0.0 Hz  z=+2.5
