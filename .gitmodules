@@ -1,3 +1,6 @@
 [submodule "external/desktop-fly"]
 	path = external/desktop-fly
 	url = https://github.com/DenisSergeevitch/desktop-fly
+[submodule "external/NeuroFly"]
+	path = external/NeuroFly
+	url = https://github.com/seven-monarchs/NeuroFly.git

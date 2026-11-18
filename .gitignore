@@ -38,3 +38,4 @@ site/
 Thumbs.db
 .vscode/
 .idea/
+.venv310/
