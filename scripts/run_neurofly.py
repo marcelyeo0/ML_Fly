@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import os
 import re
+import shutil
 import sys
 from pathlib import Path
 
@@ -48,6 +49,13 @@ def main() -> None:
     for stream in (sys.stdout, sys.stderr):
         stream.reconfigure(encoding="utf-8", errors="replace")
     os.environ["PYTHONIOENCODING"] = "utf-8"
+    # flyvis looks for its pretrained ensemble under $FLYVIS_ROOT_DIR/results/flow;
+    # NeuroFly ships the weights, so stage them there once.
+    flyvis_root = NEUROFLY.parents[1] / "data" / "processed" / "flyvis"
+    flow = flyvis_root / "results" / "flow" / "0000"
+    if not flow.exists():
+        shutil.copytree(NEUROFLY / "simulation_data" / "flyvis_pretrained_weights" / "0000", flow)
+    os.environ["FLYVIS_ROOT_DIR"] = str(flyvis_root)
     os.environ["BRIAN2_NUMPY_FALLBACK"] = "1" if args.backend == "numpy" else "0"
     if os.name != "nt":
         os.environ.setdefault("MUJOCO_GL", "egl")

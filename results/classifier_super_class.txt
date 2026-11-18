@@ -1,0 +1,20 @@
+{'use_nt': False} accuracy=0.973  macro-F1=0.860  (majority-class baseline macro-F1=0.072) 78 s
+{'use_nt': True} accuracy=0.978  macro-F1=0.870  (majority-class baseline macro-F1=0.072) 86 s
+{'use_nt': True, 'use_position': True} accuracy=0.981  macro-F1=0.897  (majority-class baseline macro-F1=0.072) 75 s
+                    precision    recall  f1-score   support
+
+         ascending      0.965     0.949     0.957       434
+           central      0.991     0.971     0.981      8095
+        descending      0.585     0.868     0.699       325
+         endocrine      1.000     0.789     0.882        19
+             motor      0.759     0.786     0.772        28
+             optic      0.998     0.987     0.993     19381
+           sensory      0.973     0.995     0.984      4088
+ sensory_ascending      0.903     0.959     0.930       145
+visual_centrifugal      0.742     0.924     0.823       131
+ visual_projection      0.930     0.980     0.954      2009
+
+          accuracy                          0.981     34655
+         macro avg      0.885     0.921     0.897     34655
+      weighted avg      0.984     0.981     0.982     34655
+
