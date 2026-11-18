@@ -56,6 +56,9 @@ def main() -> None:
     if not flow.exists():
         shutil.copytree(NEUROFLY / "simulation_data" / "flyvis_pretrained_weights" / "0000", flow)
     os.environ["FLYVIS_ROOT_DIR"] = str(flyvis_root)
+    from flybrain.compat import patch_datamate_windows
+
+    patch_datamate_windows()
     os.environ["BRIAN2_NUMPY_FALLBACK"] = "1" if args.backend == "numpy" else "0"
     if os.name != "nt":
         os.environ.setdefault("MUJOCO_GL", "egl")
